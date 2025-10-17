@@ -2,13 +2,10 @@
 
 ### 🧾 Descripción del proyecto
 
-Mi idea de proyecto es una **App de Recetas** desarrollada en **Kotlin con Android Studio**.  
+Mi idea de proyecto es una **App de Recetas**
 La aplicación permite **ver, agregar y guardar recetas de cocina**, mostrando una lista con imagen, nombre y descripción.  
 Cada receta puede incluir su foto, lista de ingredientes y pasos de preparación.  
 El usuario también puede **buscar recetas** por nombre y **marcarlas como favoritas** para acceder fácilmente después.  
-
-El propósito principal es **practicar RecyclerView, CardView, SearchView, Intents y Material Design**, aplicando un diseño limpio con tonos **rosa pastel**.  
-Este proyecto me ayudará a reforzar conceptos de interfaz gráfica, manejo de listas y navegación entre Activities en Android Studio.
 
 ---
 
@@ -17,10 +14,7 @@ Este proyecto me ayudará a reforzar conceptos de interfaz gráfica, manejo de l
 Los siguientes mockups representan las pantallas principales que tendrá la aplicación.  
 Están creados con diseño tipo móvil y se ubican dentro de la carpeta `/Mockups`.
 
-> 💡 **Importante:**  
-> Asegúrate de nombrar las imágenes exactamente como se indica a continuación, para que se visualicen correctamente en este README.
 
----
 
 ### 🏠 Pantalla principal – Lista de Recetas
 Muestra las recetas guardadas con imagen, nombre y descripción.

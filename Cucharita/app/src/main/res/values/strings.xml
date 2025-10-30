@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">Cucharita</string>
+
+    <!-- Titles -->
+    <string name="title_recipes">My Recipes</string>
+    <string name="title_favorites">Favorite Recipes</string>
+
+    <!-- Buttons -->
+    <string name="btn_add_recipe">Add Recipe</string>
+    <string name="btn_save">Save Recipe</string>
+    <string name="btn_favorite">Add to Favorites</string>
+    <string name="btn_remove_favorite">Remove from Favorites</string>
+
+    <!-- Hints -->
+    <string name="hint_title">Recipe Title</string>
+    <string name="hint_description">Description</string>
+    <string name="hint_ingredients">Ingredients (comma separated)</string>
+    <string name="hint_steps">Steps (comma separated)</string>
+
+    <!-- Labels -->
+    <string name="label_ingredients">Ingredients:</string>
+    <string name="label_steps">Steps:</string>
+
+    <!-- Toast messages -->
+    <string name="toast_empty_fields">Please fill in all required fields</string>
+    <string name="toast_recipe_added">Recipe saved successfully</string>
 </resources>

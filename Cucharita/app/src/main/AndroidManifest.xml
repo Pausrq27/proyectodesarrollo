@@ -26,6 +26,13 @@
             android:label="@string/title_recipes"
             android:theme="@style/Theme.Cucharita" />
 
+        <!-- Edit recipe screen -->
+        <activity
+            android:name=".EditRecipeActivity"
+            android:exported="false"
+            android:label="@string/edit_recipe"
+            android:theme="@style/Theme.Cucharita" />
+
         <!-- Add recipe screen -->
         <activity
             android:name=".AddRecipeActivity"
@@ -44,7 +51,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

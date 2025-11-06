@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Recipe title -->
         <TextView
             android:id="@+id/tvTitle"
             android:textSize="22sp"
@@ -19,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <!-- Recipe description -->
         <TextView
             android:id="@+id/tvDescription"
             android:textSize="16sp"
@@ -27,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <!-- Ingredients label -->
         <TextView
             android:text="@string/label_ingredients"
             android:textStyle="bold"
@@ -34,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <!-- Ingredients list -->
         <TextView
             android:id="@+id/tvIngredients"
             android:textColor="@android:color/darker_gray"
@@ -41,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <!-- Steps label -->
         <TextView
             android:text="@string/label_steps"
             android:textStyle="bold"
@@ -48,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <!-- Steps content -->
         <TextView
             android:id="@+id/tvSteps"
             android:textColor="@android:color/darker_gray"
@@ -55,10 +61,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <!-- Favorite button -->
         <Button
             android:id="@+id/btnFavorite"
             android:text="@string/btn_favorite"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Edit button -->
+        <Button
+            android:id="@+id/btnEdit"
+            android:text="@string/edit_recipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:textColor="@android:color/white" />
+
+        <!-- Delete button -->
+        <Button
+            android:id="@+id/btnDelete"
+            android:text="@string/delete_recipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:textColor="@android:color/white" />
+
     </LinearLayout>
 </ScrollView>

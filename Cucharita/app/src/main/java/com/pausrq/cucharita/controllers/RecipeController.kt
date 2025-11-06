@@ -1,6 +1,8 @@
 package com.pausrq.cucharita.controllers
+
 import com.pausrq.cucharita.models.Recipe
 import com.pausrq.cucharita.storage.MemoryRecipeManager
+
 class RecipeController {
 
     private val memoryManager = MemoryRecipeManager()
@@ -23,5 +25,10 @@ class RecipeController {
 
     fun getFavoriteRecipes(): List<Recipe> {
         return memoryManager.getFavorites()
+    }
+
+    //NEW METHOD: delete a recipe by name
+    fun deleteRecipe(name: String) {
+        memoryManager.deleteRecipeByName(name)
     }
 }

@@ -18,6 +18,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <!-- Search bar -->
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_hint"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:padding="10dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:drawable/edit_text" />
+
     <!-- Recipe list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerRecipes"

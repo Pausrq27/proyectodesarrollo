@@ -1,7 +1,7 @@
 package com.pausrq.cucharita.storage
-import com.pausrq.cucharita.models.Recipe
-import com.pausrq.cucharita.interfaces.IDataManager
 
+import com.pausrq.cucharita.interfaces.IDataManager
+import com.pausrq.cucharita.models.Recipe
 
 class MemoryRecipeManager : IDataManager {
 
@@ -26,5 +26,17 @@ class MemoryRecipeManager : IDataManager {
 
     override fun getFavorites(): List<Recipe> {
         return recipeList.filter { it.isFavorite() }
+    }
+
+    // NEW: delete recipe by name
+    fun deleteRecipeByName(name: String) {
+        val iterator = recipeList.iterator()
+        while (iterator.hasNext()) {
+            val recipe = iterator.next()
+            if (recipe.getTitle().equals(name, ignoreCase = true)) {
+                iterator.remove()
+                break
+            }
+        }
     }
 }

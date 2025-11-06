@@ -2,23 +2,25 @@ package com.pausrq.cucharita
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.pausrq.cucharita.controllers.RecipeController
-import com.pausrq.cucharita.models.Recipe
-import com.pausrq.cucharita.AddRecipeActivity
-import com.pausrq.cucharita.FavoritesActivity
-import com.pausrq.cucharita.RecipeDetailActivity
+    import com.pausrq.cucharita.controllers.RecipeController
+    import com.pausrq.cucharita.models.Recipe
 
-class MainActivity : AppCompatActivity() {
+    class MainActivity : AppCompatActivity() {
 
-    private val controller = RecipeController()
+        private val controller = RecipeController()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecipeAdapter
     private lateinit var addButton: FloatingActionButton
     private lateinit var favButton: FloatingActionButton
+    private lateinit var searchBox: EditText
+    private var allRecipes: List<Recipe> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +30,12 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerRecipes)
         addButton = findViewById(R.id.btnAdd)
         favButton = findViewById(R.id.btnFav)
+        searchBox = findViewById(R.id.etSearch)
 
         // setup list of recipes
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = RecipeAdapter(controller.getRecipes()) { recipe ->
+        allRecipes = controller.getRecipes()
+        adapter = RecipeAdapter(allRecipes) { recipe ->
             // open recipe detail
             val intent = Intent(this, RecipeDetailActivity::class.java)
             intent.putExtra("recipeName", recipe.getTitle())
@@ -48,11 +52,28 @@ class MainActivity : AppCompatActivity() {
         favButton.setOnClickListener {
             startActivity(Intent(this, FavoritesActivity::class.java))
         }
+
+        // search by name or description
+        searchBox.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString().lowercase()
+                val filtered = allRecipes.filter {
+                    it.getTitle().lowercase().contains(query) ||
+                            it.getDescription().lowercase().contains(query)
+                }
+                adapter.updateData(filtered)
+            }
+        })
     }
 
     // refresh list when user comes back
     override fun onResume() {
         super.onResume()
-        adapter.updateData(controller.getRecipes())
+        allRecipes = controller.getRecipes()
+        adapter.updateData(allRecipes)
     }
 }

@@ -10,12 +10,16 @@
     <string name="btn_save">Save Recipe</string>
     <string name="btn_favorite">Add to Favorites</string>
     <string name="btn_remove_favorite">Remove from Favorites</string>
+    <string name="btn_save_changes">Save Changes</string>
+    <string name="btn_yes">Yes</string>
+    <string name="btn_cancel">Cancel</string>
 
     <!-- Hints -->
     <string name="hint_title">Recipe Title</string>
     <string name="hint_description">Description</string>
     <string name="hint_ingredients">Ingredients (comma separated)</string>
     <string name="hint_steps">Steps (comma separated)</string>
+    <string name="search_hint">Search recipes...</string>
 
     <!-- Labels -->
     <string name="label_ingredients">Ingredients:</string>
@@ -24,4 +28,13 @@
     <!-- Toast messages -->
     <string name="toast_empty_fields">Please fill in all required fields</string>
     <string name="toast_recipe_added">Recipe saved successfully</string>
+    <string name="toast_recipe_updated">Recipe updated successfully</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_confirm_update_title">Confirm Update</string>
+    <string name="dialog_confirm_update">Do you want to save the changes to this recipe?</string>
+
+    <!-- Edit/Delete -->
+    <string name="edit_recipe">Edit Recipe</string>
+    <string name="delete_recipe">Delete Recipe</string>
 </resources>

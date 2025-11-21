@@ -4,6 +4,7 @@
     <!-- Titles -->
     <string name="title_recipes">My Recipes</string>
     <string name="title_favorites">Favorite Recipes</string>
+    <string name="title_gallery">Recipe Gallery</string> <!-- ✅ nueva línea -->
 
     <!-- Buttons -->
     <string name="btn_add_recipe">Add Recipe</string>
@@ -13,6 +14,7 @@
     <string name="btn_save_changes">Save Changes</string>
     <string name="btn_yes">Yes</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="btn_select_image">Select Image</string> <!-- ✅ nueva línea -->
 
     <!-- Hints -->
     <string name="hint_title">Recipe Title</string>
@@ -29,6 +31,7 @@
     <string name="toast_empty_fields">Please fill in all required fields</string>
     <string name="toast_recipe_added">Recipe saved successfully</string>
     <string name="toast_recipe_updated">Recipe updated successfully</string>
+    <string name="toast_image_selected">Image selected successfully</string> <!-- ✅ nueva línea -->
 
     <!-- Dialogs -->
     <string name="dialog_confirm_update_title">Confirm Update</string>

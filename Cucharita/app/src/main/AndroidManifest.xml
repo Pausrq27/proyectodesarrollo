@@ -12,6 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cucharita">
 
+        <!-- ✅ Recipe Gallery screen -->
+        <activity
+            android:name=".RecipeGalleryActivity"
+            android:exported="false"
+            android:label="@string/title_gallery"
+            android:theme="@style/Theme.Cucharita" />
+
         <!-- Favorites screen -->
         <activity
             android:name=".FavoritesActivity"

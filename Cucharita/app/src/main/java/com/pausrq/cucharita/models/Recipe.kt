@@ -1,11 +1,13 @@
 package com.pausrq.cucharita.models
 
+import android.graphics.Bitmap
+
 data class Recipe(
     private var title: String,
     private var description: String,
     private var ingredients: List<String>,
     private var steps: List<String>,
-    private var image: String? = null,
+    private var image: Bitmap? = null, // ✅ Now stores image as Bitmap
     private var isFavorite: Boolean = false
 ) {
 
@@ -21,8 +23,9 @@ data class Recipe(
     fun getSteps(): List<String> = steps
     fun setSteps(list: List<String>) { steps = list }
 
-    fun getImage(): String? = image
-    fun setImage(value: String?) { image = value }
+    // ✅ Image now handled as Bitmap
+    fun getImage(): Bitmap? = image
+    fun setImage(value: Bitmap?) { image = value }
 
     fun isFavorite(): Boolean = isFavorite
     fun setFavorite(value: Boolean) { isFavorite = value }

@@ -9,16 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-    import com.pausrq.cucharita.controllers.RecipeController
-    import com.pausrq.cucharita.models.Recipe
+import com.pausrq.cucharita.controllers.RecipeController
+import com.pausrq.cucharita.models.Recipe
 
-    class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
-        private val controller = RecipeController()
+    private val controller = RecipeController()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecipeAdapter
     private lateinit var addButton: FloatingActionButton
     private lateinit var favButton: FloatingActionButton
+    private lateinit var galleryButton: FloatingActionButton
     private lateinit var searchBox: EditText
     private var allRecipes: List<Recipe> = listOf()
 
@@ -30,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
         recyclerView = findViewById(R.id.recyclerRecipes)
         addButton = findViewById(R.id.btnAdd)
         favButton = findViewById(R.id.btnFav)
+        galleryButton = findViewById(R.id.btnGallery)
         searchBox = findViewById(R.id.etSearch)
 
         // setup list of recipes
@@ -51,6 +53,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
         // open favorites screen
         favButton.setOnClickListener {
             startActivity(Intent(this, FavoritesActivity::class.java))
+        }
+
+        // ✅ open gallery screen
+        galleryButton.setOnClickListener {
+            startActivity(Intent(this, RecipeGalleryActivity::class.java))
         }
 
         // search by name or description

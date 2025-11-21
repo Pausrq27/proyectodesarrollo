@@ -5,7 +5,8 @@ import com.pausrq.cucharita.storage.MemoryRecipeManager
 
 class RecipeController {
 
-    private val memoryManager = MemoryRecipeManager()
+    // ✅ Singleton reference
+    private val memoryManager = MemoryRecipeManager
 
     fun addNewRecipe(recipe: Recipe) {
         memoryManager.addRecipe(recipe)
@@ -27,7 +28,7 @@ class RecipeController {
         return memoryManager.getFavorites()
     }
 
-    //NEW METHOD: delete a recipe by name
+    // NEW METHOD: delete a recipe by name
     fun deleteRecipe(name: String) {
         memoryManager.deleteRecipeByName(name)
     }

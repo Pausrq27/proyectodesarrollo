@@ -3,7 +3,8 @@ package com.pausrq.cucharita.storage
 import com.pausrq.cucharita.interfaces.IDataManager
 import com.pausrq.cucharita.models.Recipe
 
-class MemoryRecipeManager : IDataManager {
+// ✅ Use "object" instead of "class" to make it a Singleton
+object MemoryRecipeManager : IDataManager {
 
     private val recipeList = mutableListOf<Recipe>()
 
@@ -28,7 +29,6 @@ class MemoryRecipeManager : IDataManager {
         return recipeList.filter { it.isFavorite() }
     }
 
-    // NEW: delete recipe by name
     fun deleteRecipeByName(name: String) {
         val iterator = recipeList.iterator()
         while (iterator.hasNext()) {

@@ -5,7 +5,7 @@
 Mi idea de proyecto es una **App de Recetas**
 La aplicación permite **ver, agregar y guardar recetas de cocina**, mostrando una lista con imagen, nombre y descripción.  
 Cada receta puede incluir su foto, lista de ingredientes y pasos de preparación.  
-El usuario también puede **buscar recetas** por nombre y **marcarlas como favoritas** para acceder fácilmente después.  
+El usuario también puede **buscar recetas** por nombre y **marcarlas como favoritas** para acceder fácilmente después...  
 
 ---
 

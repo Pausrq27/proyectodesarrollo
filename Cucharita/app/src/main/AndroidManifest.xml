@@ -12,6 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cucharita">
 
+        <!-- ✅ Recipe Gallery screen -->
+        <activity
+            android:name=".RecipeGalleryActivity"
+            android:exported="false"
+            android:label="@string/title_gallery"
+            android:theme="@style/Theme.Cucharita" />
+
         <!-- Favorites screen -->
         <activity
             android:name=".FavoritesActivity"
@@ -24,6 +31,13 @@
             android:name=".RecipeDetailActivity"
             android:exported="false"
             android:label="@string/title_recipes"
+            android:theme="@style/Theme.Cucharita" />
+
+        <!-- Edit recipe screen -->
+        <activity
+            android:name=".EditRecipeActivity"
+            android:exported="false"
+            android:label="@string/edit_recipe"
             android:theme="@style/Theme.Cucharita" />
 
         <!-- Add recipe screen -->
@@ -44,7 +58,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

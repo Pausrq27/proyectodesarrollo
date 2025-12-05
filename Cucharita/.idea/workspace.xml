@@ -10,6 +10,11 @@
           <theme>@style/Theme.Cucharita</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_edit_recipe.xml">
+        <config>
+          <theme>@style/Theme.Cucharita</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_favorites.xml">
         <config>
           <theme>@style/Theme.Cucharita</theme>
@@ -25,6 +30,16 @@
           <theme>@style/Theme.Cucharita</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_recipe_gallery.xml">
+        <config>
+          <theme>@style/Theme.Cucharita</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_gallery.xml">
+        <config>
+          <theme>@style/Theme.Cucharita</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_recipe.xml">
         <config>
           <theme>@style/Theme.Cucharita</theme>
@@ -36,7 +51,18 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f13fe2b-2616-4a5b-8f6d-d263599c33d6" name="Changes" comment="" />
+    <list default="true" id="1f13fe2b-2616-4a5b-8f6d-d263599c33d6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/pausrq/cucharita/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/pausrq/cucharita/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/pausrq/cucharita/controllers/RecipeController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/pausrq/cucharita/controllers/RecipeController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/pausrq/cucharita/storage/MemoryRecipeManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/pausrq/cucharita/storage/MemoryRecipeManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +128,8 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "pausrq-task4",
+    "git-widget-placeholder": "TASK6",
+    "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/USUARIO/Documents/GitHub/proyectodesarrollo/Cucharita"
   }
 }]]></component>
@@ -110,6 +137,9 @@
     <key name="android.template.-1640936913">
       <recent name="com.pausrq.cucharita" />
       <recent name="com.pausRq.cucharita" />
+    </key>
+    <key name="android.template.-139376270">
+      <recent name="com.pausrq.cucharita" />
     </key>
     <key name="android.template.474576880">
       <recent name="com.pausrq.cucharita" />
@@ -204,12 +234,12 @@
       <map>
         <entry key="com.pausrq.cucharita">
           <value>
-            <CheckInfo lastCheckTimestamp="1761862995717" />
+            <CheckInfo lastCheckTimestamp="1763702905633" />
           </value>
         </entry>
         <entry key="com.pausrq.cucharita.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1761862995718" />
+            <CheckInfo lastCheckTimestamp="1763702905618" />
           </value>
         </entry>
       </map>

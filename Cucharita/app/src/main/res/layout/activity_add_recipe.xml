@@ -22,16 +22,15 @@
             android:hint="@string/hint_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:inputType="textMultiLine"
-            android:minLines="2"
-            android:layout_marginTop="8dp" />
+            android:minLines="2" />
 
         <EditText
             android:id="@+id/editIngredients"
             android:hint="@string/hint_ingredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
             android:layout_marginTop="8dp" />
 
         <EditText
@@ -39,14 +38,33 @@
             android:hint="@string/hint_steps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
             android:layout_marginTop="8dp" />
 
+        <!-- ✅ Image Preview -->
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="12dp"
+            android:scaleType="centerCrop"
+            android:background="@android:color/darker_gray" />
+
+        <!-- ✅ Select image button -->
+        <Button
+            android:id="@+id/btnSelectImage"
+            android:text="@string/btn_select_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <!-- Save button -->
         <Button
             android:id="@+id/btnSave"
             android:text="@string/btn_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 </ScrollView>

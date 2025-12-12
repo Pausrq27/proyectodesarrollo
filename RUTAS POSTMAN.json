@@ -1,0 +1,367 @@
+{
+  "info": {
+    "name": "Recipe API - Complete Collection",
+    "description": "Colección completa para la API de recetas con autenticación Supabase",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://proyectodesarrollo-0c7d.onrender.com",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.session && response.session.access_token) {",
+                  "        pm.collectionVariables.set('token', response.session.access_token);",
+                  "        console.log('Token guardado:', response.session.access_token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@example.com\",\n  \"password\": \"password123\",\n  \"username\": \"miusuario\",\n  \"fullName\": \"Mi Nombre Completo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Registrar un nuevo usuario. El token se guarda automáticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.session && response.session.access_token) {",
+                  "        pm.collectionVariables.set('token', response.session.access_token);",
+                  "        console.log('Token guardado:', response.session.access_token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Iniciar sesión. El token se guarda automáticamente en la variable {{token}}."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            },
+            "description": "Obtener información del usuario autenticado actual."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"nuevo_username\",\n  \"fullName\": \"Nuevo Nombre Completo\",\n  \"avatarUrl\": \"https://example.com/avatar.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "profile"]
+            },
+            "description": "Actualizar el perfil del usuario autenticado."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Cerrar sesión del usuario actual."
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints de autenticación y gestión de perfiles"
+    },
+    {
+      "name": "Recipes",
+      "item": [
+        {
+          "name": "Get All Recipes (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/recipes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recipes"]
+            },
+            "description": "Obtener TODAS las recetas públicas de todos los usuarios. No requiere autenticación."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Recipes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/recipes/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recipes", "me"]
+            },
+            "description": "Obtener solo MIS recetas. Requiere autenticación."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Recipe by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/recipes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recipes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "recipe-id-aqui",
+                  "description": "ID de la receta"
+                }
+              ]
+            },
+            "description": "Obtener una receta específica por su ID. No requiere autenticación."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Recipe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pasta Carbonara\",\n  \"description\": \"Deliciosa pasta italiana con salsa carbonara cremosa\",\n  \"ingredients\": [\n    \"400g de espaguetis\",\n    \"200g de panceta\",\n    \"4 huevos\",\n    \"100g de queso parmesano\",\n    \"Sal y pimienta al gusto\"\n  ],\n  \"steps\": [\n    \"Cocinar la pasta en agua con sal\",\n    \"Freír la panceta hasta que esté crujiente\",\n    \"Batir los huevos con el queso rallado\",\n    \"Mezclar la pasta caliente con los huevos\",\n    \"Agregar la panceta y servir inmediatamente\"\n  ],\n  \"imageUrl\": \"https://example.com/carbonara.jpg\",\n  \"isFavorite\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/recipes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recipes"]
+            },
+            "description": "Crear una nueva receta. Requiere autenticación."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Recipe",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pasta Carbonara Mejorada\",\n  \"description\": \"La mejor pasta carbonara que probarás\",\n  \"ingredients\": [\n    \"400g de espaguetis\",\n    \"200g de guanciale\",\n    \"4 huevos\",\n    \"100g de pecorino romano\",\n    \"Pimienta negra recién molida\"\n  ],\n  \"steps\": [\n    \"Cocinar la pasta al dente\",\n    \"Saltear el guanciale hasta dorar\",\n    \"Mezclar yemas con queso\",\n    \"Combinar todo fuera del fuego\",\n    \"Servir con pimienta negra\"\n  ],\n  \"imageUrl\": \"https://example.com/carbonara-new.jpg\",\n  \"isFavorite\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/recipes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recipes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "recipe-id-aqui",
+                  "description": "ID de la receta a actualizar"
+                }
+              ]
+            },
+            "description": "Actualizar una receta existente. Solo el dueño puede actualizarla."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Recipe",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/recipes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recipes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "recipe-id-aqui",
+                  "description": "ID de la receta a eliminar"
+                }
+              ]
+            },
+            "description": "Eliminar una receta. Solo el dueño puede eliminarla."
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Recipe Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [],
+                  "description": "Selecciona una imagen (JPG, PNG, etc.)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/recipes/upload",
+              "host": ["{{base_url}}"],
+              "path": ["api", "recipes", "upload"]
+            },
+            "description": "Subir una imagen para una receta. Retorna la URL pública de la imagen."
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints para gestión de recetas"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  }
+}

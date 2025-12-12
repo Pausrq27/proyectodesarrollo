@@ -63,11 +63,11 @@
             android:layout_margin="16dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnGallery"
+            android:id="@+id/btnPublicRecipes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_gallery"
-            android:contentDescription="Gallery"
+            app:srcCompat="@android:drawable/ic_menu_search"
+            android:contentDescription="Ver recetas públicas"
             android:layout_margin="16dp" />
 
     </LinearLayout>

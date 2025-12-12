@@ -40,4 +40,6 @@
     <!-- Edit/Delete -->
     <string name="edit_recipe">Edit Recipe</string>
     <string name="delete_recipe">Delete Recipe</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
 </resources>

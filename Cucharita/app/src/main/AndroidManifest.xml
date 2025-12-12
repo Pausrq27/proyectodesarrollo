@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- ✅ Añadir permisos de internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -10,54 +14,79 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Cucharita">
+        android:theme="@style/Theme.Cucharita"
+        android:usesCleartextTraffic="true"> <!-- ✅ Para desarrollo local -->
 
-        <!-- ✅ Recipe Gallery screen -->
+        <!-- ✅ Login como LAUNCHER -->
         <activity
-            android:name=".RecipeGalleryActivity"
-            android:exported="false"
-            android:label="@string/title_gallery"
-            android:theme="@style/Theme.Cucharita" />
-
-        <!-- Favorites screen -->
-        <activity
-            android:name=".FavoritesActivity"
-            android:exported="false"
-            android:label="@string/title_favorites"
-            android:theme="@style/Theme.Cucharita" />
-
-        <!-- Recipe detail screen -->
-        <activity
-            android:name=".RecipeDetailActivity"
-            android:exported="false"
-            android:label="@string/title_recipes"
-            android:theme="@style/Theme.Cucharita" />
-
-        <!-- Edit recipe screen -->
-        <activity
-            android:name=".EditRecipeActivity"
-            android:exported="false"
-            android:label="@string/edit_recipe"
-            android:theme="@style/Theme.Cucharita" />
-
-        <!-- Add recipe screen -->
-        <activity
-            android:name=".AddRecipeActivity"
-            android:exported="false"
-            android:label="@string/btn_add_recipe"
-            android:theme="@style/Theme.Cucharita" />
-
-        <!-- Main launcher -->
-        <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="Login"
             android:theme="@style/Theme.Cucharita">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- ✅ Register -->
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false"
+            android:label="Crear Cuenta"
+            android:theme="@style/Theme.Cucharita" />
+
+        <!-- MainActivity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Cucharita" />
+
+        <!-- ✅ Nuevas actividades para API -->
+        <activity
+            android:name=".AddRecipeApiActivity"
+            android:exported="false"
+            android:label="Agregar Receta"
+            android:theme="@style/Theme.Cucharita" />
+
+        <activity
+            android:name=".RecipeDetailApiActivity"
+            android:exported="false"
+            android:label="Detalle de Receta"
+            android:theme="@style/Theme.Cucharita" />
+
+        <!-- Resto de actividades existentes... -->
+        <activity
+            android:name=".RecipeGalleryActivity"
+            android:exported="false"
+            android:label="@string/title_gallery"
+            android:theme="@style/Theme.Cucharita" />
+
+        <activity
+            android:name=".FavoritesActivity"
+            android:exported="false"
+            android:label="@string/title_favorites"
+            android:theme="@style/Theme.Cucharita" />
+
+        <activity
+            android:name=".RecipeDetailActivity"
+            android:exported="false"
+            android:label="@string/title_recipes"
+            android:theme="@style/Theme.Cucharita" />
+
+        <activity
+            android:name=".EditRecipeActivity"
+            android:exported="false"
+            android:label="@string/edit_recipe"
+            android:theme="@style/Theme.Cucharita" />
+
+        <activity
+            android:name=".AddRecipeActivity"
+            android:exported="false"
+            android:label="@string/btn_add_recipe"
+            android:theme="@style/Theme.Cucharita" />
+
     </application>
 
 </manifest>

@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
-    private const val BASE_URL = "http://localhost:3000/"
+    private const val BASE_URL = "https://proyectodesarrollo-0c7d.onrender.com"
 
     private var retrofit: Retrofit? = null
     private lateinit var sessionManager: SessionManager

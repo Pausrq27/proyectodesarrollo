@@ -69,3 +69,4 @@ class RecipeGalleryActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerGallery)
         loadGallery(recyclerView)
     }
+}

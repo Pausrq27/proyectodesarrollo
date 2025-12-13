@@ -12,7 +12,6 @@ const authenticateToken = async (req, res, next) => {
 
     const token = authHeader.substring(7);
 
-    // Verificar el token con Supabase
     const { data: { user }, error } = await supabase.auth.getUser(token);
 
     if (error || !user) {
@@ -21,7 +20,6 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
-    // Adjuntar usuario al request
     req.user = user;
     next();
   } catch (error) {

@@ -15,7 +15,6 @@ const {
   uploadImage
 } = require('../controllers/recipeController');
 
-// Configurar multer para manejar uploads en memoria
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -30,27 +29,21 @@ const upload = multer({
   }
 });
 
-// Todas las rutas requieren autenticación
 router.use(authenticateToken);
 
-// Obtener recetas
 router.get('/', getAllRecipes);
 router.get('/my-recipes', getMyRecipes);
 router.get('/favorites', getFavorites);
 router.get('/search', searchRecipe);
 router.get('/:id', getRecipeById);
 
-// Crear receta
 router.post('/', createRecipe);
 
-// Actualizar receta
 router.put('/:id', updateRecipe);
 router.patch('/:id/favorite', toggleFavorite);
 
-// Subir imagen
 router.post('/:id/image', upload.single('image'), uploadImage);
 
-// Eliminar receta
 router.delete('/:id', deleteRecipe);
 
 module.exports = router;

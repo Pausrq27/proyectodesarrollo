@@ -1,6 +1,5 @@
 const { supabase } = require('../config/supabase');
 
-// Registro de usuario
 const register = async (req, res) => {
   try {
     const { email, password, name } = req.body;
@@ -40,7 +39,6 @@ const register = async (req, res) => {
   }
 };
 
-// Inicio de sesión
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -76,7 +74,6 @@ const login = async (req, res) => {
   }
 };
 
-// Cerrar sesión
 const logout = async (req, res) => {
   try {
     const { error } = await supabase.auth.signOut();
@@ -98,7 +95,6 @@ const logout = async (req, res) => {
   }
 };
 
-// Obtener usuario actual
 const getCurrentUser = async (req, res) => {
   try {
     res.json({

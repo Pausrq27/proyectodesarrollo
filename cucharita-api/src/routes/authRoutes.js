@@ -8,11 +8,9 @@ const {
   getCurrentUser
 } = require('../controllers/authController');
 
-// Rutas públicas
 router.post('/register', register);
 router.post('/login', login);
 
-// Rutas protegidas
 router.post('/logout', authenticateToken, logout);
 router.get('/me', authenticateToken, getCurrentUser);
 

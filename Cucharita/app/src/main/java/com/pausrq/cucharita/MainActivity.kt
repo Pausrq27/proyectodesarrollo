@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var galleryButton: FloatingActionButton
     private lateinit var searchBox: EditText
     private lateinit var sessionManager: SessionManager
+    private lateinit var toolbar: Toolbar
     private var allRecipes: List<Recipe> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +45,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_main)
+
+        // Configurar Toolbar
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         // Conectar UI
         recyclerView = findViewById(R.id.recyclerRecipes)
@@ -105,6 +111,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_refresh -> {
                 loadRecipes()
+                Toast.makeText(this, "Actualizando...", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -151,6 +158,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Sí") { _, _ ->
                 sessionManager.clearSession()
                 ApiClient.clearSession()
+                Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
                 goToLogin()
             }
             .setNegativeButton("Cancelar", null)

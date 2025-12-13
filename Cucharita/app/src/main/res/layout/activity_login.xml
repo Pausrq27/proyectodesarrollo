@@ -14,13 +14,13 @@
 
         <!-- Logo/Título -->
         <TextView
-            android:text="🍳 Cucharita"
-            android:textSize="36sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_orange_dark"
-            android:layout_marginBottom="48dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="48dp"
+            android:text=" 🥄  Cucharita"
+            android:textColor="@color/black"
+            android:textSize="36sp"
+            android:textStyle="bold" />
 
         <!-- Email -->
         <EditText
@@ -59,14 +59,14 @@
         <!-- Botón principal (Login/Register) -->
         <Button
             android:id="@+id/loginButton"
-            android:text="Iniciar Sesión"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/black"
             android:padding="16dp"
-            android:textSize="16sp"
-            android:backgroundTint="@android:color/holo_orange_dark"
+            android:text="Iniciar Sesión"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
+            android:textSize="16sp" />
 
         <!-- Texto toggle -->
         <TextView

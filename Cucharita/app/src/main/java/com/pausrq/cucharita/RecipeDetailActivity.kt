@@ -1,9 +1,9 @@
-// 📁 app/src/main/java/com/pausrq/cucharita/RecipeDetailActivity.kt
 package com.pausrq.cucharita
 
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,18 +13,23 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.pausrq.cucharita.controllers.RecipeController
 import com.pausrq.cucharita.models.Recipe
+import com.pausrq.cucharita.storage.SessionManager
 import com.pausrq.cucharita.utils.Util
 import kotlinx.coroutines.launch
 
 class RecipeDetailActivity : AppCompatActivity() {
 
     private val controller = RecipeController()
+    private lateinit var sessionManager: SessionManager
     private var currentRecipe: Recipe? = null
     private var recipeId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_detail)
+
+        // Inicializar SessionManager
+        sessionManager = SessionManager(this)
 
         // Obtener ID
         recipeId = intent.getStringExtra("recipeId")
@@ -88,27 +93,40 @@ class RecipeDetailActivity : AppCompatActivity() {
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)
                 .into(imageView)
-            imageView.visibility = android.view.View.VISIBLE
+            imageView.visibility = View.VISIBLE
         } else {
-            imageView.visibility = android.view.View.GONE
+            imageView.visibility = View.GONE
         }
 
-        // Botón favorito
+        // Verificar si el usuario actual es el dueño de la receta
+        val currentUserId = sessionManager.getUserId()
+        val isOwner = currentUserId == recipe.getUserId()
+
+        // Botón favorito - SIEMPRE visible
+        favBtn.visibility = View.VISIBLE
         favBtn.text = if (recipe.isFavorite()) "Quitar de Favoritos" else "Agregar a Favoritos"
         favBtn.setOnClickListener {
             toggleFavorite()
         }
 
-        // Botón editar
-        editBtn.setOnClickListener {
-            val intent = Intent(this, EditRecipeActivity::class.java)
-            intent.putExtra("recipeId", recipe.getId())
-            startActivity(intent)
-        }
+        // Botones de Editar y Eliminar - SOLO si es el dueño
+        if (isOwner) {
+            editBtn.visibility = View.VISIBLE
+            deleteBtn.visibility = View.VISIBLE
 
-        // Botón eliminar
-        deleteBtn.setOnClickListener {
-            showDeleteDialog()
+            editBtn.setOnClickListener {
+                val intent = Intent(this, EditRecipeActivity::class.java)
+                intent.putExtra("recipeId", recipe.getId())
+                startActivity(intent)
+            }
+
+            deleteBtn.setOnClickListener {
+                showDeleteDialog()
+            }
+        } else {
+            // Ocultar botones si NO es el dueño
+            editBtn.visibility = View.GONE
+            deleteBtn.visibility = View.GONE
         }
     }
 

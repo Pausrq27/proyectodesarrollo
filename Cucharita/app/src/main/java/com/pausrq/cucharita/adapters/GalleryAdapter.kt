@@ -6,11 +6,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.pausrq.cucharita.R
 import com.pausrq.cucharita.models.Recipe
 
-class GalleryAdapter(private val recipeList: List<Recipe>) :
-    RecyclerView.Adapter<GalleryAdapter.ViewHolder>() {
+class GalleryAdapter(
+    private val recipeList: List<Recipe>,
+    private val onClick: (Recipe) -> Unit
+) : RecyclerView.Adapter<GalleryAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val image: ImageView = view.findViewById(R.id.itemImage)
@@ -29,11 +32,22 @@ class GalleryAdapter(private val recipeList: List<Recipe>) :
         holder.title.text = recipe.getTitle()
         holder.desc.text = recipe.getDescription()
 
-        val image = recipe.getImage()
-        if (image != null) {
-            holder.image.setImageBitmap(image)
+        // Cargar imagen con Glide
+        val imageUrl = recipe.getImageUrl()
+        if (!imageUrl.isNullOrEmpty()) {
+            Glide.with(holder.itemView.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .centerCrop()
+                .into(holder.image)
         } else {
             holder.image.setImageResource(R.drawable.ic_launcher_background)
+        }
+
+        // Click listener
+        holder.itemView.setOnClickListener {
+            onClick(recipe)
         }
     }
 

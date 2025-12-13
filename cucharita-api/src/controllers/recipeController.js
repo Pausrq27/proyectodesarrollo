@@ -1,180 +1,427 @@
-import { supabase } from '../config/supabase.js';
+const { supabase } = require('../config/supabase');
+const { v4: uuidv4 } = require('uuid');
 
-// CREAR RECETA
-export const createRecipe = async (req, res) => {
-    try {
-        const { title, description, ingredients, steps, imageUrl, isFavorite } = req.body;
+const addFavoriteStatus = async (recipes, userId) => {
+  if (!recipes || recipes.length === 0) return [];
 
-        const { data, error } = await supabase
-            .from('recipes')
-            .insert([{
-                user_id: req.user.id,
-                title,
-                description,
-                ingredients,
-                steps,
-                image_url: imageUrl,
-                is_favorite: isFavorite || false
-            }])
-            .select()
-            .single();
+  const recipeIds = recipes.map(r => r.id);
 
-        if (error) throw error;
+  const { data: favorites, error: favError } = await supabase
+    .from('user_favorites')
+    .select('recipe_id')
+    .eq('user_id', userId)
+    .in('recipe_id', recipeIds);
 
-        res.status(201).json(data);
+  if (favError) {
+    return recipes.map(r => ({ ...r, is_favorite: false }));
+  }
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  const favoriteIds = new Set(favorites?.map(f => f.recipe_id) || []);
+
+  return recipes.map(recipe => ({
+    ...recipe,
+    is_favorite: favoriteIds.has(recipe.id)
+  }));
 };
 
-// OBTENER MIS RECETAS
-export const getMyRecipes = async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('recipes')
-            .select('*')
-            .eq('user_id', req.user.id)
-            .order('created_at', { ascending: false });
+const getAllRecipes = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-        if (error) throw error;
+    const { data: recipes, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-        res.json(data);
+    if (error) throw error;
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    const recipesWithFavorites = await addFavoriteStatus(recipes, userId);
+
+    res.json({ recipes: recipesWithFavorites });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch recipes' });
+  }
 };
 
-// OBTENER TODAS LAS RECETAS PÚBLICAS (de todos los usuarios)
-export const getAllPublicRecipes = async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('recipes')
-            .select(`
-                *,
-                profiles (
-                    username,
-                    full_name,
-                    avatar_url
-                )
-            `)
-            .order('created_at', { ascending: false });
+const getMyRecipes = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-        if (error) throw error;
+    const { data: recipes, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
 
-        res.json(data);
+    if (error) throw error;
 
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    const recipesWithFavorites = await addFavoriteStatus(recipes, userId);
+
+    res.json({ recipes: recipesWithFavorites });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch recipes' });
+  }
 };
 
-// OBTENER UNA RECETA
-export const getRecipe = async (req, res) => {
-    try {
-        const { data, error } = await supabase
-            .from('recipes')
-            .select(`
-                *,
-                profiles (
-                    username,
-                    full_name,
-                    avatar_url
-                )
-            `)
-            .eq('id', req.params.id)
-            .single();
+const getFavorites = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-        if (error) throw error;
+    const { data: favorites, error: favError } = await supabase
+      .from('user_favorites')
+      .select('recipe_id')
+      .eq('user_id', userId);
 
-        // RLS se encarga de verificar si el usuario puede ver esta receta
-        res.json(data);
+    if (favError) throw favError;
 
-    } catch (err) {
-        res.status(404).json({ error: 'Recipe not found' });
+    if (!favorites || favorites.length === 0) {
+      return res.json({ recipes: [] });
     }
+
+    const recipeIds = favorites.map(f => f.recipe_id);
+
+    const { data: recipes, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .in('id', recipeIds)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    const recipesWithFavorites = recipes.map(recipe => ({
+      ...recipe,
+      is_favorite: true
+    }));
+
+    res.json({ recipes: recipesWithFavorites });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch favorites' });
+  }
 };
 
-// ACTUALIZAR RECETA
-export const updateRecipe = async (req, res) => {
-    try {
-        const { title, description, ingredients, steps, imageUrl, isFavorite } = req.body;
+const getRecipeById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
 
-        const { data, error } = await supabase
-            .from('recipes')
-            .update({
-                title,
-                description,
-                ingredients,
-                steps,
-                image_url: imageUrl,
-                is_favorite: isFavorite
-            })
-            .eq('id', req.params.id)
-            .eq('user_id', req.user.id) // Solo el dueño puede actualizar
-            .select()
-            .single();
+    const { data, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-        if (error) throw error;
-
-        res.json(data);
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    if (error || !data) {
+      return res.status(404).json({ error: 'Recipe not found' });
     }
+
+    const { data: favorite } = await supabase
+      .from('user_favorites')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('recipe_id', id)
+      .maybeSingle();
+
+    res.json({
+      recipe: {
+        ...data,
+        is_favorite: !!favorite
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch recipe' });
+  }
 };
 
-// ELIMINAR RECETA
-export const deleteRecipe = async (req, res) => {
-    try {
-        const { error } = await supabase
-            .from('recipes')
-            .delete()
-            .eq('id', req.params.id)
-            .eq('user_id', req.user.id); // Solo el dueño puede eliminar
+const searchRecipe = async (req, res) => {
+  try {
+    const { query } = req.query;
+    const userId = req.user.id;
 
-        if (error) throw error;
-
-        res.json({ message: 'Recipe deleted' });
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    if (!query) {
+      return res.status(400).json({ error: 'Search query is required' });
     }
+
+    const { data: recipes, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .or(`title.ilike.%${query}%,description.ilike.%${query}%`)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    const recipesWithFavorites = await addFavoriteStatus(recipes, userId);
+
+    res.json({ recipes: recipesWithFavorites });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to search recipes' });
+  }
 };
 
-// SUBIR IMAGEN
-export const uploadImage = async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file provided' });
+const createRecipe = async (req, res) => {
+  try {
+    const { title, description, ingredients, steps } = req.body;
+
+    if (!title || !description) {
+      return res.status(400).json({ error: 'Title and description are required' });
+    }
+
+    const ingredientsArray = Array.isArray(ingredients)
+      ? ingredients
+      : ingredients
+      ? ingredients.split(',').map(i => i.trim())
+      : [];
+
+    const stepsArray = Array.isArray(steps)
+      ? steps
+      : steps
+      ? steps.split(',').map(s => s.trim())
+      : [];
+
+    const { data, error } = await supabase
+      .from('recipes')
+      .insert([
+        {
+          user_id: req.user.id,
+          title,
+          description,
+          ingredients: ingredientsArray,
+          steps: stepsArray
         }
+      ])
+      .select()
+      .single();
 
-        const fileExt = req.file.originalname.split('.').pop();
-        const fileName = `${req.user.id}-${Date.now()}.${fileExt}`;
-        const filePath = `recipes/${fileName}`;
+    if (error) throw error;
 
-        const { data, error } = await supabase.storage
-            .from('recipe-images')
-            .upload(filePath, req.file.buffer, {
-                contentType: req.file.mimetype,
-                upsert: false
-            });
+    res.status(201).json({
+      message: 'Recipe created successfully',
+      recipe: { ...data, is_favorite: false }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create recipe' });
+  }
+};
 
-        if (error) throw error;
+const updateRecipe = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, ingredients, steps } = req.body;
+    const userId = req.user.id;
 
-        // Obtener URL pública
-        const { data: publicData } = supabase.storage
-            .from('recipe-images')
-            .getPublicUrl(filePath);
+    const { data: existingRecipe, error: checkError } = await supabase
+      .from('recipes')
+      .select('user_id')
+      .eq('id', id)
+      .single();
 
-        res.json({
-            message: 'Image uploaded successfully',
-            url: publicData.publicUrl,
-            path: filePath
-        });
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    if (checkError || !existingRecipe) {
+      return res.status(404).json({ error: 'Recipe not found' });
     }
+
+    if (existingRecipe.user_id !== userId) {
+      return res.status(403).json({ error: 'Not authorized to update this recipe' });
+    }
+
+    const updateData = {};
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (ingredients !== undefined) {
+      updateData.ingredients = Array.isArray(ingredients)
+        ? ingredients
+        : ingredients.split(',').map(i => i.trim());
+    }
+    if (steps !== undefined) {
+      updateData.steps = Array.isArray(steps)
+        ? steps
+        : steps.split(',').map(s => s.trim());
+    }
+
+    const { data, error } = await supabase
+      .from('recipes')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    const { data: favorite } = await supabase
+      .from('user_favorites')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('recipe_id', id)
+      .maybeSingle();
+
+    res.json({
+      message: 'Recipe updated successfully',
+      recipe: { ...data, is_favorite: !!favorite }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update recipe' });
+  }
+};
+
+const toggleFavorite = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const { data: recipe, error: recipeError } = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (recipeError || !recipe) {
+      return res.status(404).json({ error: 'Recipe not found' });
+    }
+
+    const { data: existingFavorite } = await supabase
+      .from('user_favorites')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('recipe_id', id)
+      .maybeSingle();
+
+    let isFavorite;
+
+    if (existingFavorite) {
+      await supabase
+        .from('user_favorites')
+        .delete()
+        .eq('user_id', userId)
+        .eq('recipe_id', id);
+      isFavorite = false;
+    } else {
+      await supabase
+        .from('user_favorites')
+        .insert([{ user_id: userId, recipe_id: id }]);
+      isFavorite = true;
+    }
+
+    res.json({
+      message: 'Favorite status updated',
+      recipe: { ...recipe, is_favorite: isFavorite }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to toggle favorite' });
+  }
+};
+
+const deleteRecipe = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { data: recipe, error: checkError } = await supabase
+      .from('recipes')
+      .select('user_id, image_url')
+      .eq('id', id)
+      .single();
+
+    if (checkError || !recipe) {
+      return res.status(404).json({ error: 'Recipe not found' });
+    }
+
+    if (recipe.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Not authorized to delete this recipe' });
+    }
+
+    if (recipe.image_url) {
+      const imagePath = recipe.image_url.split('/').pop();
+      await supabase.storage
+        .from('recipe-images')
+        .remove([`${req.user.id}/${imagePath}`]);
+    }
+
+    await supabase.from('recipes').delete().eq('id', id);
+
+    res.json({ message: 'Recipe deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete recipe' });
+  }
+};
+
+const uploadImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    if (!req.file) {
+      return res.status(400).json({ error: 'No image file provided' });
+    }
+
+    const { data: recipe, error: checkError } = await supabase
+      .from('recipes')
+      .select('user_id, image_url')
+      .eq('id', id)
+      .single();
+
+    if (checkError || !recipe) {
+      return res.status(404).json({ error: 'Recipe not found' });
+    }
+
+    if (recipe.user_id !== userId) {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+
+    if (recipe.image_url) {
+      const oldImagePath = recipe.image_url.split('/').pop();
+      await supabase.storage
+        .from('recipe-images')
+        .remove([`${userId}/${oldImagePath}`]);
+    }
+
+    const fileExt = req.file.originalname.split('.').pop();
+    const fileName = `${uuidv4()}.${fileExt}`;
+    const filePath = `${userId}/${fileName}`;
+
+    await supabase.storage
+      .from('recipe-images')
+      .upload(filePath, req.file.buffer, {
+        contentType: req.file.mimetype,
+        upsert: false
+      });
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('recipe-images')
+      .getPublicUrl(filePath);
+
+    const { data: updatedRecipe } = await supabase
+      .from('recipes')
+      .update({ image_url: publicUrl })
+      .eq('id', id)
+      .select()
+      .single();
+
+    const { data: favorite } = await supabase
+      .from('user_favorites')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('recipe_id', id)
+      .maybeSingle();
+
+    res.json({
+      message: 'Image uploaded successfully',
+      recipe: { ...updatedRecipe, is_favorite: !!favorite },
+      image_url: publicUrl
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to upload image',
+      details: error.message
+    });
+  }
+};
+
+module.exports = {
+  getAllRecipes,
+  getMyRecipes,
+  getFavorites,
+  getRecipeById,
+  searchRecipe,
+  createRecipe,
+  updateRecipe,
+  toggleFavorite,
+  deleteRecipe,
+  uploadImage
 };

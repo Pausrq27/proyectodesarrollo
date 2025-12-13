@@ -1,42 +1,49 @@
-import express from 'express';
-import multer from 'multer';
-import {
-    createRecipe,
-    getMyRecipes,
-    getAllPublicRecipes,
-    getRecipe,
-    updateRecipe,
-    deleteRecipe,
-    uploadImage
-} from '../controllers/recipeController.js';
-import { authenticateUser } from '../middleware/auth.js';
-
+const express = require('express');
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
+const multer = require('multer');
+const { authenticateToken } = require('../middleware/auth');
+const {
+  getAllRecipes,
+  getMyRecipes,
+  getFavorites,
+  getRecipeById,
+  searchRecipe,
+  createRecipe,
+  updateRecipe,
+  toggleFavorite,
+  deleteRecipe,
+  uploadImage
+} = require('../controllers/recipeController');
 
-// ============================================
-// RUTAS PÚBLICAS (no requieren autenticación)
-// ============================================
-router.get('/', getAllPublicRecipes);  // GET /api/recipes - TODAS las recetas
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB max
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'));
+    }
+  }
+});
 
-// ============================================
-// RUTAS PROTEGIDAS (requieren autenticación)
-// ============================================
+router.use(authenticateToken);
 
-// Mis recetas (debe ir ANTES de /:id para evitar conflictos)
-router.get('/me', authenticateUser, getMyRecipes);  // GET /api/recipes/me - Solo mis recetas
+router.get('/', getAllRecipes);
+router.get('/my-recipes', getMyRecipes);
+router.get('/favorites', getFavorites);
+router.get('/search', searchRecipe);
+router.get('/:id', getRecipeById);
 
-// Crear receta
-router.post('/', authenticateUser, createRecipe);  // POST /api/recipes
+router.post('/', createRecipe);
 
-// Subir imagen
-router.post('/upload', authenticateUser, upload.single('image'), uploadImage);
+router.put('/:id', updateRecipe);
+router.patch('/:id/favorite', toggleFavorite);
 
-// ============================================
-// RUTAS CON PARÁMETROS (al final para evitar conflictos)
-// ============================================
-router.get('/:id', getRecipe);  // GET /api/recipes/:id
-router.put('/:id', authenticateUser, updateRecipe);  // PUT /api/recipes/:id
-router.delete('/:id', authenticateUser, deleteRecipe);  // DELETE /api/recipes/:id
+router.post('/:id/image', upload.single('image'), uploadImage);
 
-export default router;
+router.delete('/:id', deleteRecipe);
+
+module.exports = router;

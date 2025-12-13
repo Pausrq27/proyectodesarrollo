@@ -1,81 +1,94 @@
+// 📁 app/src/main/java/com/pausrq/cucharita/EditRecipeActivity.kt
 package com.pausrq.cucharita
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.pausrq.cucharita.controllers.RecipeController
 import com.pausrq.cucharita.models.Recipe
 import com.pausrq.cucharita.utils.Util
+import kotlinx.coroutines.launch
 
 class EditRecipeActivity : AppCompatActivity() {
 
     private val controller = RecipeController()
-    private lateinit var searchInput: EditText
     private lateinit var titleInput: EditText
     private lateinit var descInput: EditText
     private lateinit var ingredientsInput: EditText
     private lateinit var stepsInput: EditText
-    private lateinit var searchButton: Button
     private lateinit var saveButton: Button
     private var currentRecipe: Recipe? = null
+    private var recipeId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_recipe)
 
-        // connect layout elements
-        searchInput = findViewById(R.id.editSearchName)
-        searchButton = findViewById(R.id.btnSearch)
+        // Conectar elementos
         titleInput = findViewById(R.id.editTitle)
         descInput = findViewById(R.id.editDescription)
         ingredientsInput = findViewById(R.id.editIngredients)
         stepsInput = findViewById(R.id.editSteps)
         saveButton = findViewById(R.id.btnSaveChanges)
 
-        // get recipe name passed from other screen (optional)
-        val recipeName = intent.getStringExtra("recipeName")
-        currentRecipe = recipeName?.let { controller.searchRecipe(it) }
+        // Obtener ID de la receta
+        recipeId = intent.getStringExtra("recipeId")
 
-        // fill if recipe came from another screen
-        currentRecipe?.let { recipe -> fillFields(recipe) }
-
-        // search button logic
-        searchButton.setOnClickListener {
-            val name = searchInput.text.toString().trim()
-            if (name.isEmpty()) {
-                Toast.makeText(this, "Please enter a recipe name to search", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val found = controller.searchRecipe(name)
-            if (found != null) {
-                currentRecipe = found
-                fillFields(found)
-                Toast.makeText(this, "Recipe loaded successfully", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Recipe not found", Toast.LENGTH_SHORT).show()
-            }
+        if (recipeId != null) {
+            loadRecipe(recipeId!!)
+        } else {
+            Toast.makeText(this, "Error: No se proporcionó ID de receta", Toast.LENGTH_SHORT).show()
+            finish()
         }
 
-        // save changes button
+        // Guardar cambios
         saveButton.setOnClickListener {
             if (titleInput.text.isNullOrBlank() || descInput.text.isNullOrBlank()) {
-                Toast.makeText(this, getString(R.string.toast_empty_fields), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor completa título y descripción", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // show confirmation dialog
             AlertDialog.Builder(this)
-                .setTitle(getString(R.string.dialog_confirm_update_title))
-                .setMessage(getString(R.string.dialog_confirm_update))
-                .setPositiveButton(getString(R.string.btn_yes)) { _, _ ->
+                .setTitle("Confirmar Actualización")
+                .setMessage("¿Deseas guardar los cambios?")
+                .setPositiveButton("Sí") { _, _ ->
                     saveChanges()
                 }
-                .setNegativeButton(getString(R.string.btn_cancel), null)
+                .setNegativeButton("Cancelar", null)
                 .show()
+        }
+    }
+
+    private fun loadRecipe(id: String) {
+        lifecycleScope.launch {
+            try {
+                val result = controller.getRecipeById(id)
+
+                result.onSuccess { recipe ->
+                    currentRecipe = recipe
+                    fillFields(recipe)
+                }
+
+                result.onFailure { error ->
+                    Toast.makeText(
+                        this@EditRecipeActivity,
+                        "Error al cargar receta: ${error.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    finish()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@EditRecipeActivity,
+                    "Error de conexión: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+                finish()
+            }
         }
     }
 
@@ -97,9 +110,42 @@ class EditRecipeActivity : AppCompatActivity() {
             recipe.setDescription(desc)
             recipe.setIngredients(ingredients)
             recipe.setSteps(steps)
-        }
 
-        Toast.makeText(this, getString(R.string.toast_recipe_updated), Toast.LENGTH_SHORT).show()
-        finish()
+            saveButton.isEnabled = false
+            saveButton.text = "Guardando..."
+
+            lifecycleScope.launch {
+                try {
+                    val result = controller.updateRecipe(recipe)
+
+                    result.onSuccess {
+                        Toast.makeText(
+                            this@EditRecipeActivity,
+                            "Receta actualizada exitosamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    }
+
+                    result.onFailure { error ->
+                        Toast.makeText(
+                            this@EditRecipeActivity,
+                            "Error al actualizar: ${error.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        saveButton.isEnabled = true
+                        saveButton.text = "Guardar Cambios"
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@EditRecipeActivity,
+                        "Error de conexión: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    saveButton.isEnabled = true
+                    saveButton.text = "Guardar Cambios"
+                }
+            }
+        }
     }
 }

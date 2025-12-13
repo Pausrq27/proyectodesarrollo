@@ -1,25 +1,17 @@
-// =============================================
-// routes/authRoutes.js - ACTUALIZADO
-// =============================================
-import express from 'express';
-import { 
-    register, 
-    login, 
-    logout, 
-    getCurrentUser,
-    updateProfile 
-} from '../controllers/authController.js';
-import { authenticateUser } from '../middleware/auth.js';
+const express = require('express');
+const router = express.Router();
+const { authenticateToken } = require('../middleware/auth');
+const {
+  register,
+  login,
+  logout,
+  getCurrentUser
+} = require('../controllers/authController');
 
-const authRouter = express.Router();
+router.post('/register', register);
+router.post('/login', login);
 
-// Rutas públicas
-authRouter.post('/register', register);
-authRouter.post('/login', login);
+router.post('/logout', authenticateToken, logout);
+router.get('/me', authenticateToken, getCurrentUser);
 
-// Rutas protegidas
-authRouter.post('/logout', authenticateUser, logout);
-authRouter.get('/me', authenticateUser, getCurrentUser);
-authRouter.put('/profile', authenticateUser, updateProfile);
-
-export default authRouter;
+module.exports = router;
